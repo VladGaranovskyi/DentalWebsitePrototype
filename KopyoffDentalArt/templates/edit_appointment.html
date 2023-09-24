@@ -1,0 +1,303 @@
+{% extends 'base.html' %}
+{% block title %}Book an appointment!{% endblock %}
+{% block title_addition %}<h2>Book an appointment in Dr. Helen Kopyoff's office located in Staten Island</h2>{% endblock %}
+
+{% load static %}
+{%block links%} 
+<link rel="stylesheet" href="{% static 'css/tempus-dominus.min.css'%}" crossorigin="anonymous"> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{%endblock%}
+
+{% block content %}
+<div id="fh5co-reservation-form" class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 fh5co-heading animate-box">
+				<h2>Booking</h2>
+				<div class="row">
+					<div class="col-md-6">
+						<p>Provide the data about: appointment date and time, type of service, your name, your email and message. Please make sure you have an allowed insurance. Allowed insurances you can see <a href="insurances.html">here</a></p>
+						<p>Appointment time ranges:</p>
+						<ul>
+							<li>Tuesday 8:30 AM - 7:00 PM</li>
+							<li>Thursday 8:30 AM - 7:00 PM</li>
+							<li>Saturday 9:00 AM - 4:00 PM</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-6 col-md-push-6 col-sm-6 col-sm-push-6">
+				<form method="post" id="form-wrap">
+					{% csrf_token %}
+					<div class="row form-group">
+						<div class="col-md-12">
+							<label for="insurance">Insurance</label>
+							<input type="text" name="insurance" class="form-control" id="insurance">			
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-12">
+							<label for="service">Type Of Service</label>
+							<select name="service" id="service" class="form-control custom_select">
+								<option value="Routine Exams" style="color: brown;">Routine Exams</option>
+								<option value="Dental Hygiene" style="color: brown;">Dental Hygiene</option>
+								<option value="Veneers" style="color: brown;">Veneers</option>
+								<option value="Dentures" style="color: brown;">Dentures</option>
+								<option value="Dental Bonding" style="color: brown;">Dental Bonding</option>
+								<option value="Dental Bridges" style="color: brown;">Dental Bridges</option>
+								<option value="Crowns" style="color: brown;">Crowns</option>
+								<option value="Teeth whitening" style="color: brown;">Teeth whitening</option>
+								<option value="Dental Fillings" style="color: brown;">Dental Fillings</option>
+								<option value="Emergency" style="color: brown;">Emergency</option>
+								<option value="Implants" style="color: brown;">Implants</option>
+								<option value="Root Canals" style="color: brown;">Root Canals</option>								
+							</select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-12">
+							<label for="name">Your Name</label>
+							<input type="text" name="name" class="form-control" value="{{ appointment.name }}" id="name">
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-12">
+							<label for="email">Your Email</label>
+							<input type="text" name="email" class="form-control" value="{{ appointment.email }}" id="email">
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-12">
+							<label for="message">Your Message</label>
+							<textarea name="message" id="message" cols="30" rows="10" class="form-control">{{ appointment.message }}</textarea>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-12">
+							<label for="taskdatetime">When</label>
+							<input type="text" name="date" class="form-control" id="taskdatetime"/>
+						</div>
+					</div>
+					{% if errors %} {% for error in errors %}
+						<p>
+							{{ error|safe }}
+						</p>
+					{% endfor %} {% endif %}
+					<div class="form-group" id="radioTimes">
+					</div>						
+					<div class="row form-group">
+						<div class="col-md-12">
+							<input type="submit" class="btn btn-primary btn-outline btn-lg" value="Submit Form">
+						</div>
+					</div>
+
+				</form>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>	
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="{% static 'js/tempus-dominus.min.js'%}" crossorigin="anonymous"></script>
+
+
+<!-- Date Time -->
+<!-- <script src="js/bootstrap-datetimepicker.js"></script> -->
+
+<!-- <script>
+	// Everything except weekend days
+	const validate = dateString => {
+	const day = (new Date(dateString)).getDay();
+	if (day==0 || day==2 || day==4 || day==6) {
+		return false;
+	}
+	return true;
+	}
+
+	// Sets the value to '' in case of an invalid date
+	document.querySelector(`input[type='date']`).onchange = evt => {
+	if (!validate(evt.target.value)) {
+		evt.target.value = '';
+	}
+	}
+</script> -->
+<script>
+	const dates = JSON.parse(`{{ dates|safe }}`)
+	const blocks = JSON.parse(`{{ blocks|safe }}`)
+
+	times = [
+		"9:00 AM",
+		"10:00 AM",
+		"11:00 AM",
+		"12:00 PM",
+		"1:00 PM",
+		"2:00 PM",
+		"3:00 PM",
+		"4:00 PM",
+		"5:00 PM",
+		"6:00 PM",
+		"7:00 PM",
+	]
+
+	timesWeekend = [
+		"9:00 AM",
+		"10:00 AM",
+		"11:00 AM",
+		"12:00 PM",
+		"1:00 PM",
+		"2:00 PM",
+		"3:00 PM",
+		"4:00 PM",
+	]
+
+	function getTimeHtml(i, t){
+		return `<input class="form-check-input" type="radio" name="time" id="time${i}" value="${t}">
+				<label class="form-check-label" for="time${i}">
+					${t}
+				</label>`
+	}
+
+	function timeToHoursAndMinutes(time) {
+		const [timeStr, ampm] = time.split(" ");
+		const [hourStr, minuteStr] = timeStr.split(":");
+		let hour = parseInt(hourStr);
+		const minute = parseInt(minuteStr);
+		
+		if (ampm == "PM" && hour != 12) {
+		  hour += 12;
+		} else if (ampm == "AM" && hour == 12) {
+		  hour = 0;
+		}
+	  
+		return [hour, minute];
+	}
+
+	function isTimeWithinRange(time, startTime, endTime) {
+		const [hour, minute] = timeToHoursAndMinutes(time);
+		const [startHour, startMinute] = timeToHoursAndMinutes(startTime);
+		const [endHour, endMinute] = timeToHoursAndMinutes(endTime);
+	  
+		const currentTimeInMinutes = hour * 60 + minute;
+		const startTimeInMinutes = startHour * 60 + startMinute;
+		const endTimeInMinutes = endHour * 60 + endMinute;
+	  
+		return currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes;
+	}
+
+	function isDatetimeWithinRange(datetime, startDatetime, endDatetime) {
+		const currentDatetime = new Date(datetime);
+		const startDatetimeObj = new Date(startDatetime);
+		const endDatetimeObj = new Date(endDatetime);
+	
+		return currentDatetime >= startDatetimeObj && currentDatetime < endDatetimeObj;
+	}
+
+	document.getElementById("taskdatetime").onchange = evt => {
+		currentDate = `${evt.target.value.split(" ")[0]}`;
+		currentService = document.getElementById("service")
+		let _times = []
+		if(new Date(currentDate).getDay() == 6){
+			timesWeekend.forEach(t =>{
+				_times.push(t)
+			})			
+		}
+		else{
+			times.forEach(t =>{
+				_times.push(t)
+			})
+		}
+		container = document.getElementById("radioTimes");
+		if(dates[currentDate] != null){
+			dates[currentDate].forEach(t => {
+				for(let i = 0; i < _times.length; i++){
+					if(isTimeWithinRange(_times[i], t[0], t[1])){
+						_times.splice(i, 1)
+					}
+				}
+			});
+			/*for(let i = 0; i < _times.length; i++){
+				if(_times[i] != "taken"){
+					const size = service_map[currentService.value]["Size"]
+					for(let j = 1; j <= size; j++){
+						if(_times[i + j] == "taken"){
+							_times[i] = "0";
+						}
+					}
+				}
+			} */
+		}	
+		blocks.forEach(b =>{
+			for(let i = 0; i < _times.length; i++){
+				currentDateTime = currentDate + " " + _times[i];
+				if(isDatetimeWithinRange(currentDateTime, b[0], b[1])){
+					_times[i] = "taken";
+				}
+			}
+		});	
+		let i = 1;
+		container.innerHTML = "";
+		_times.forEach(t => {		
+			if(t != "taken" && t != "0"){
+				const radio = document.createElement("div");
+				radio.class = "form-check";
+				radio.innerHTML = getTimeHtml(i, t);
+				container.appendChild(radio);
+				i++;
+			}	
+		});
+		if(container.innerHTML == ""){
+			container.innerHTML = "<p>There are no available times for booking on this day</p>";
+		}
+		evt.target.value = currentDate;
+	};
+
+	function getOddSaturdays() {
+		const today = new Date();
+		const nextYear = new Date(today.getFullYear() + 1, today.getMonth(), today.getDate());
+		const oddSaturdays = [];
+	
+		while (today <= nextYear) {
+			if (today.getDay() === 6 && today.getDate() % 2 === 1) {
+				oddSaturdays.push(new Date(today));
+			}
+			today.setDate(today.getDate() + 1);
+		}
+	
+		return oddSaturdays;
+	}
+	blocked_days = JSON.parse(`{{ blocked_days|safe }}`)
+	for(let i = 0; i < blocked_days.length; i++){
+		blocked_days[i] = new Date(blocked_days[i])
+	}
+
+	const picker = new tempusDominus.TempusDominus(document.getElementById("taskdatetime"), {
+		display: {
+			viewMode: "calendar",
+			components: {
+				decades: false,
+				year: true,
+				month: true,
+				date: true,
+				hours: false,
+				minutes: false,
+				seconds: false
+			},
+			theme: 'auto',
+			icons:{
+				next:"icon-arrow-right22",
+				previous:"icon-arrow-left22",
+			}
+		},
+		restrictions:{
+			daysOfWeekDisabled: [1, 3, 5, 0],
+			disabledDates: getOddSaturdays().concat(blocked_days),
+			minDate: new Date(),
+		}
+	});	
+</script>
+{%endblock%}

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block title %}Blocking appointments{% endblock %}
+
+{% load static %}
+{%block links%} 
+<link rel="stylesheet" href="{% static 'css/tempus-dominus.min.css'%}" crossorigin="anonymous"> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{%endblock%}
+
+{% block content %}
+<div id="fh5co-reservation-form" class="fh5co-section">
+	<div class="container">
+		<div class="row">			
+			<div class="col-md-6 col-md-push-3 col-sm-6 col-sm-push-6">
+				<form method="post" id="form-wrap">
+					{% csrf_token %}
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <label for="taskdatetime">From</label>
+                            <input type="text" name="date_from" class="form-control" id="taskdatetime1"/>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <label for="taskdatetime">To</label>
+                            <input type="text" name="date_to" class="form-control" id="taskdatetime2"/>
+                        </div>
+                    </div>
+					<div class="row form-group">
+						<div class="col-md-12">
+							<input type="submit" class="btn btn-primary btn-outline btn-lg" value="Submit Form">
+						</div>
+					</div>
+				</form>
+			</div>		
+		</div>
+		<div class="row">
+			<ul>
+				{% if blocks %}
+				{% for b in blocks %}
+				<li>{{ b.start_date }} - {{ b.end_date }}</li>
+				{% endfor %}
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+</div>	
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="{% static 'js/tempus-dominus.min.js'%}" crossorigin="anonymous"></script>
+
+
+<!-- Date Time -->
+<!-- <script src="js/bootstrap-datetimepicker.js"></script> -->
+
+<!-- <script>
+	// Everything except weekend days
+	const validate = dateString => {
+	const day = (new Date(dateString)).getDay();
+	if (day==0 || day==2 || day==4 || day==6) {
+		return false;
+	}
+	return true;
+	}
+
+	// Sets the value to '' in case of an invalid date
+	document.querySelector(`input[type='date']`).onchange = evt => {
+	if (!validate(evt.target.value)) {
+		evt.target.value = '';
+	}
+	}
+</script> -->
+<script>
+	const picker1 = new tempusDominus.TempusDominus(document.getElementById("taskdatetime1"), {
+		display: {
+			viewMode: "calendar",
+			components: {
+				decades: false,
+				year: true,
+				month: true,
+				date: true,
+				hours: true,
+				minutes: true,
+				seconds: false
+			},
+			theme: 'auto',
+			icons:{
+				next:"icon-arrow-right22",
+				previous:"icon-arrow-left22",
+				down:"icon-arrow-down22",
+				up:"icon-arrow-up22",
+			}
+		}
+	});	
+    const picker2 = new tempusDominus.TempusDominus(document.getElementById("taskdatetime2"), {
+		display: {
+			viewMode: "calendar",
+			components: {
+				decades: false,
+				year: true,
+				month: true,
+				date: true,
+				hours: true,
+				minutes: true,
+				seconds: false
+			},
+			theme: 'auto',
+			icons:{
+				next:"icon-arrow-right22",
+				previous:"icon-arrow-left22",
+				down:"icon-arrow-down22",
+				up:"icon-arrow-up22",
+			}
+		}
+	});	
+</script>
+{%endblock%}

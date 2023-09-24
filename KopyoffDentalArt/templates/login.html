@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Log In{% endblock %}
+
+{% load static %}
+{% block content %}
+	<div id="fh5co-contact" class="fh5co-section animate-box">
+		<div class="container">		
+			<div class="row">
+                <div class="col-md-12 col-md-push-3 fh5co-heading animate-box">
+                    <p>You don't need to login if you want to book an appointment</p>
+				</div>
+				<div class="col-md-6 col-md-push-3 col-sm-6 col-sm-push-3">
+					<form id="form-wrap" method="post">
+						{% csrf_token %}
+						<div class="row form-group">
+							<div class="col-md-12">
+								<label for="name">{{ form.username.label_tag }}</label>
+								<input type="text" name="username" class="form-control" id="name">
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-12">
+								<label for="email">{{ form.password.label_tag }}</label>
+								<input type="text" class="form-control" name="password" id="email">
+							</div>
+						</div>
+						{% if form.non_field_errors %} {% for error in form.non_field_errors %}
+							<p style="font-size: 13px;">
+								{{ error|escape }}
+							</p>
+						{% endfor %} {% endif %}
+						<div class="row form-group">
+							<div class="col-md-12">
+								<input type="submit" class="btn btn-primary btn-outline btn-lg" value="Log In">
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div id="fh5co-started" class="fh5co-section animate-box" style="background-image: url(images/chair.jpg);" data-stellar-background-ratio="0.5">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row animate-box">
+				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+					<h2>Book an appointment</h2>
+					<p>Book an appointment in Dr. Helen Kopyoff's office</p>
+					<p><a href="{% url 'booking' %}" class="btn btn-primary btn-outline">Book Now</a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

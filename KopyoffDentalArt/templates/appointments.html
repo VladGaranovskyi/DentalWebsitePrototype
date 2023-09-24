@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% load static %}
+{%block links%} 
+<link rel="stylesheet" href="{% static 'css/tempus-dominus.min.css'%}" crossorigin="anonymous"> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{%endblock%}
+
+{% block content %}
+<div id="fh5co-about" class="fh5co-section">
+	<div class="container">
+        <h1 text-align="center">Today's Appointments</h1>
+		<div class="row">
+            <div class="appointment-list col-md-6">
+                {% if appointments %}
+                {% for a in appointments %}
+                <div class="appointment {{a.state}}" onclick="ViewDetails('{{a.name}}', '{{a.email}}', '{{a.message}}', '{{a.service}}', '{{a.insurance}}')">
+                    <div class="time">{{ a.start_time }} - {{ a.end_time }}</div>
+                </div>
+                {% endfor %}
+                {% else %}
+                No appointments
+                {% endif %}
+            </div>
+			<div class="col-md-5 animate-box">
+				<div class="section-heading">
+                    <p id="name"><span style="background-color: purple; border-radius: 5px">Name:</span></p> 
+                    <p id="email"><span style="background-color: purple; border-radius: 5px">Email:</span></p> 
+                    <p id="msg"><span style="background-color: purple; border-radius: 5px">Message:</span></p> 
+                    <p id="service"><span style="background-color: purple; border-radius: 5px">Service Type:</span></p> 
+                    <p id="insurance"><span style="background-color: purple; border-radius: 5px">Insurance:</span></p> 
+				</div>
+			</div>
+		</div>
+        <h1 text-align="center">Appointments on date</h1>
+        <div class="row">
+            <div class="appointment-list col-md-6" id="appointments">          
+            </div>
+            <div class="row form-group">
+                <div class="col-md-12">
+                    <label for="taskdatetime">Which day</label>
+                    <input type="text" name="date" class="form-control" id="taskdatetime"/>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="{% static 'js/tempus-dominus.min.js'%}" crossorigin="anonymous"></script>
+
+<script>
+const dates = JSON.parse(`{{ all_appointments|safe }}`)
+
+function ViewDetails(name, email, message, service, insurance){
+    document.getElementById("name").innerHTML = `<span style="background-color: purple; border-radius: 5px">Name:</span>  ${name}`;
+    document.getElementById("email").innerHTML = `<span style="background-color: purple; border-radius: 5px">Email:</span>  ${email}`;
+    document.getElementById("msg").innerHTML = `<span style="background-color: purple; border-radius: 5px">Message:</span>  ${message}`;
+    document.getElementById("service").innerHTML = `<span style="background-color: purple; border-radius: 5px">Service:</span>  ${service}`;
+    document.getElementById("insurance").innerHTML = `<span style="background-color: purple; border-radius: 5px">Insurance:</span>  ${insurance}`;
+}
+
+document.getElementById("taskdatetime").onchange = evt => {
+    container = document.getElementById("appointments");
+    currentDate = `${evt.target.value.split(" ")[0]}`;
+    if(dates[currentDate] == null){
+        container.innerHTML = `<h3><i>No appointments on ${currentDate}</i></h3>`;
+    }
+    else{
+        container.innerHTML = ``;
+        dates[currentDate].forEach(d =>{
+            const a = document.createElement("div");
+            a.setAttribute("class", "appointment upcoming");
+            a.onclick = ViewDetails(d.name, d.email, d.message, d.service, d.insurance);
+            const t = document.createElement("div");
+            t.setAttribute("class", "time");
+            t.textContent = `${d.start_time} - ${d.end_time}`;
+            a.appendChild(t);
+            container.appendChild(a);
+        });
+    }
+    evt.target.value = currentDate;
+}
+const picker = new tempusDominus.TempusDominus(document.getElementById("taskdatetime"), {
+    display: {
+        viewMode: "calendar",
+        components: {
+            decades: false,
+            year: true,
+            month: true,
+            date: true,
+            hours: false,
+            minutes: false,
+            seconds: false
+        },
+        theme: 'auto',
+        icons:{
+            next:"icon-arrow-right22",
+            previous:"icon-arrow-left22"
+        }
+    },
+    restrictions:{
+        daysOfWeekDisabled: [1, 3, 5, 0]
+    }
+});	
+</script>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Get <em>in</em> Touch{% endblock %}
+
+{% load static %}
+{% block content %}	
+	<div id="fh5co-contact" class="fh5co-section animate-box">
+		<div class="container">
+			<div class="row animate-box">
+				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+					<h2>Don't be shy, let's chat.</h2>
+					<p><a href="mailto:info@kopyoffdentalart.com" class="btn btn-primary btn-outline">Contact Us</a></p>
+				</div>
+			</div>
+			
+			{% comment %} <div class="row">
+				<div class="col-md-6 col-md-push-3 col-sm-6 col-sm-push-3">
+					<form method="post" id="form-wrap">
+						{%csrf_token%}
+						<div class="row form-group">
+							<div class="col-md-12">
+								<label for="name">Your Name</label>
+								<input type="text" class="form-control" id="name">
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-12">
+								<label for="email">Your Email</label>
+								<input type="text" class="form-control" id="email">
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-12">
+								<label for="message">Your Message</label>
+								<textarea name="" id="message" cols="30" rows="10" class="form-control"></textarea>
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-12">
+								<input type="submit" class="btn btn-primary btn-outline btn-lg" value="Submit Form">
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div> {% endcomment %}
+
+		</div>
+	</div>
+
+	<div id="fh5co-started" class="fh5co-section animate-box" style="background-image: url(images/chair.jpg);" data-stellar-background-ratio="0.5">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row animate-box">
+				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+					<h2>Book an appointment</h2>
+					<p>Book an appointment in Dr. Helen Kopyoff's office</p>
+					<p><a href="{% url 'booking' %}" class="btn btn-primary btn-outline">Book Now</a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
