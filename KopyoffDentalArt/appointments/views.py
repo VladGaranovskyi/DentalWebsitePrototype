@@ -34,7 +34,7 @@ class BookingView(View):
         return render(request, "booking.html", {"dates": get_all_dates(), "blocks": json.dumps(blockings), "blocked_days": json.dumps(Appointment.objects.get_blocked_days())})
     
     def post(self, request):
-        if "appointment_id" in request.COOKIES.keys():
+        if "appointment_id" in request.COOKIES.keys() and not request.user.is_authenticated:
             return redirect(reverse("info"))
         errors = []
         service = request.POST["service"]
@@ -58,18 +58,18 @@ class BookingView(View):
             errors.append("email is invalid")
         if errors:
             blockings = [[a.start_date.strftime("%m/%d/%Y %I:%M %p"), a.end_date.strftime("%m/%d/%Y %I:%M %p")] for a in Appointment.objects.get_blocks()]
-            return render(request, "booking.html", {"dates": self.get_all_dates(), "errors": errors, 
+            return render(request, "booking.html", {"dates": get_all_dates(), "errors": errors, 
                                                     "blocks": json.dumps(blockings), "blocked_days": json.dumps(Appointment.objects.get_blocked_days())})
         else:
             appointment = Appointment(service=service, insurance=insurance, name=name, email=email, message=message, start_date=start_date, end_date=end_date)
             appointment.save()
-            # send_mail(
-            #     "Dr. Helen Kopyoff",
-            #     f"Congratulations! You have successfully booked an appointment from {appointment.get_time()[0]} to {appointment.get_time()[1]}",
-            #     "from@example.com",
-            #     ["to@example.com"],
-            #     fail_silently=False,
-            # )
+            send_mail(
+                "Dr. Helen Kopyoff",
+                f"Congratulations! You have successfully booked appointment from {appointment.get_time()[0]} to {appointment.get_time()[1]}",
+                "info@kopyoffdentalart.com",
+                [email],
+                fail_silently=False,
+            )
             response = redirect(reverse("info"))
             response.set_cookie(key="appointment_id", value=appointment.id, secure=True, expires=datetime.strftime(appointment.end_date, "%a, %d-%b-%Y %H:%M:%S GMT"))
             return response
@@ -119,13 +119,13 @@ class EditAppointmentView(View):
             appointment.start_date = start_date
             appointment.end_date = end_date
             appointment.save()
-            # send_mail(
-            #     "Dr. Helen Kopyoff",
-            #     f"Congratulations! You have successfully booked an appointment from {appointment.get_time()[0]} to {appointment.get_time()[1]}",
-            #     "from@example.com",
-            #     ["to@example.com"],
-            #     fail_silently=False,
-            # )
+            send_mail(
+                "Dr. Helen Kopyoff",
+                f"Congratulations! You have successfully edited your appointment from {appointment.get_time()[0]} to {appointment.get_time()[1]}",
+                "info@kopyoffdentalart.com",
+                [email],
+                fail_silently=False,
+            )
             response = redirect(reverse("info"))
             response.set_cookie(key="appointment_id", value=appointment.id, secure=True, expires=datetime.strftime(appointment.end_date, "%a, %d-%b-%Y %H:%M:%S GMT"))
             return response
@@ -188,19 +188,36 @@ class ExpiredView(TemplateView, LoginRequiredMixin):
 @login_required
 def delete_absent_appointment(request, pk):
     appointment = Appointment.objects.get(pk=pk)
-    # send_mail(
-    #     "Dr. Helen Kopyoff Absense Fee",
-    #     f"Sorry, but you didn't show up at the appointment, you need to pay 50$",
-    #     "info@kopyoffdentalart.com",
-    #     ["appointment.email"],
-    #     fail_silently=False,
-    # )
+    send_mail(
+        "Dr. Helen Kopyoff Absense Fee",
+        "Sorry, but you didn't show up at the appointment, you need to pay 50$. If you weren't absent and we are wrong, please, contact us, and tell us about this",
+        "info@kopyoffdentalart.com",
+        [appointment.email],
+        fail_silently=False,
+    )
     return redirect(reverse("expired"))    
+
+@login_required
+def cancel_appointment(request, pk):
+    appointment = Appointment.objects.get(pk=pk)
+    send_mail(
+        "Dr. Helen Kopyoff Cancel",
+        "Sorry, but you canceled the appointment, you need to pay 25$. If you didn't cancel your appointment, please, contact us, and tell us about this",
+        "info@kopyoffdentalart.com",
+        [appointment.email],
+        fail_silently=False,
+    )
+    return redirect(reverse("expired"))  
 
 @login_required
 def delete_present_appointment(request, pk):
     Appointment.objects.get(pk=pk).delete()
-    return redirect(reverse("expired"))          
+    return redirect(reverse("expired"))   
+
+@login_required
+def delete_block(request, pk):
+    Appointment.objects.get(pk=pk).delete()
+    return redirect(reverse("blocking"))        
             
 
         

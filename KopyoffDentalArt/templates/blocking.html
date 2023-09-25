@@ -36,11 +36,20 @@
 		</div>
 		<div class="row">
 			<ul>
-				{% if blocks %}
-				{% for b in blocks %}
-				<li>{{ b.start_date }} - {{ b.end_date }}</li>
-				{% endfor %}
-				{% endif %}
+				<div class="appointment-list col-md-6">
+					{% if blocks %}
+					{% for b in blocks %}
+					<div class="appointment upcoming">
+						<div class="time">{{ b.start_date }} - {{ b.end_date }}</div>
+						<div class="buttons-appointment">
+							<a class="present-button" href="{% url 'delete_block' b.id %}">Delete</a>
+						</div>
+					</div>
+					{% endfor %}
+					{% else %}
+					No blocks
+					{% endif %}
+				</div>
 			</ul>
 		</div>
 	</div>

@@ -1,0 +1,5 @@
+django
+validate_email
+py3DNS
+asgiref
+sqlparse
