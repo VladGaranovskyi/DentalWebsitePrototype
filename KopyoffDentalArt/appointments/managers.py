@@ -1,5 +1,5 @@
-from django.db import models
-from datetime import datetime, time
+from django.db import models 
+from datetime import datetime, time, timedelta
 import json
 
 
@@ -20,26 +20,48 @@ class AppointmentManager(models.Manager):
         start_datetime = datetime.combine(day_to_check, start_time)
         end_datetime = datetime.combine(day_to_check, end_time)
 
-        # Query the database for overlapping appointments
-        overlapping_appointments = self.filter(
-            start_date__lte=end_datetime,
-            end_date__gte=start_datetime
-        )
+        today_appointments = self.filter(start_date__date=day_to_check)
+        times = []
+        times_dummy = []
+        while start_datetime.timestamp() <= end_datetime.timestamp():
+            times.append(start_datetime)
+            start_datetime += timedelta(hours=1)
+            
+        for a in today_appointments:
+            for t in times:
+                if t.time() >= a.start_date.time() and t.time() < a.end_date.time():
+                    print(t)
+                    if t not in times_dummy:
+                        times_dummy.append(t)
+        
+        return times == sorted(times_dummy)
 
-        # If there are overlapping appointments, the day is not fully booked
-        return not overlapping_appointments.exists()
-
-    def block_range(self, start_date, end_date):
-        appointment = self.model(name="block", email="block@", message="block", service="Dentures", insurance="1",
-        start_date=datetime.strptime(start_date, "%m/%d/%Y %I:%M %p"), end_date=datetime.strptime(end_date, "%m/%d/%Y %I:%M %p"))
-        appointment.save()
+    def block_range(self, day, times):
+        dates = [datetime.strptime(day + " " + time, "%m/%d/%Y %I:%M %p") for time in times]
+        date_dummy = None
+        inc = 0
+        for i, d in enumerate(dates):
+            if d + timedelta(hours=1) in dates:
+                if not date_dummy:
+                    date_dummy = d
+                inc += 1
+            elif date_dummy:
+                block = self.model(name="block", email="block@", message="block", service="block", insurance="block",
+                start_date=date_dummy, end_date=date_dummy + timedelta(hours=inc+1))
+                block.save()
+                date_dummy = None
+                inc = 0
+            else:
+                block = self.model(name="block", email="block@", message="block", service="block", insurance="block",
+                start_date=d, end_date=d + timedelta(hours=1))
+                block.save()
     
     def get_blocks(self):
         return self.filter(name="block")
     
     def get_blocked_days(self):
         appointments = self.all()
-        if(len(appointments) > 0):
+        if len(appointments) > 0:
             dates = []
             for a in appointments:
                 if a.start_date.date() not in dates:

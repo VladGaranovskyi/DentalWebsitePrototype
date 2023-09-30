@@ -81,14 +81,15 @@
 									<li><a href="#">Coffees</a></li>
 								</ul>
 							</li> -->
-							<li><a href="{% url 'home' %}">Home</a></li>
+							{% if not request.user.is_authenticated %}<li><a href="{% url 'home' %}">Home</a></li>{% endif %}
 							<li><a href="{% url 'booking' %}">Booking</a></li>
 							{% if "appointment_id" in request.COOKIES.keys %}<li><a href="{% url 'info' %}">Appointment</a></li>{% endif %}
-							<li><a href="{% url 'contact' %}">Contact</a></li>
+							{% if request.user.is_authenticated %}<li><a href="{% url 'booking_admin' %}">Book Admin</a></li>{% endif %}
+							{% if not request.user.is_authenticated %}<li><a href="{% url 'contact' %}">Contact</a></li>{% endif %}
 							<li><a href="{% url 'insurances' %}">Insurances</a></li>
 							{% if request.user.is_authenticated %}<li><a href="{% url 'dashboard' %}">Dashboard</a></li>{% endif %}
 							{% if request.user.is_authenticated %}<li><a href="{% url 'blocking' %}">Blocking</a></li>{% endif %}
-							{% if request.user.is_authenticated %}<li><a href="{% url 'expired' %}">Expired Appointments</a></li>{% endif %}
+							{% if request.user.is_authenticated %}<li {% if count_of_expired_appointments > 0 %}class="active"{% endif %}><a href="{% url 'expired' %}">Expired Appointments</a></li>{% endif %}
 							{% if not request.user.is_authenticated %}<li><a href="{% url 'login' %}">Log In</a></li>{% endif %}
 						</ul>
 					</div>
@@ -113,6 +114,7 @@
 			</div>
 		</div>
 	</header>
+	{% if count_of_expired_appointments > 0 %}<a href="{% url 'expired' %}">YOU HAVE EXPIRED APPOINTMENTS, here</a>{% endif %}
     {% block content %}
     {% endblock %}
     <footer id="fh5co-footer" role="contentinfo" class="fh5co-section">
@@ -133,6 +135,7 @@
 						{% if request.user.is_authenticated %}<li><a href="{% url 'blocking' %}">Blocking</a></li>{% endif %}
 						{% if request.user.is_authenticated %}<li><a href="{% url 'expired' %}">Expired Appointments</a></li>{% endif %}
 						{% if not request.user.is_authenticated %}<li><a href="{% url 'login' %}">Log In</a></li>{% endif %}
+						{% if request.user.is_authenticated %}<li><a href="{% url 'logout' %}">Log Out</a></li>{% endif %}
 					</ul>
 				</div>
 

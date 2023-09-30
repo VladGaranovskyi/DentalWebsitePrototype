@@ -17,9 +17,10 @@
                         <li>Service: {{ appointment.service }}</li>
 						<li>Message: {{ appointment.message }}</li>
 					</ul>
-					<p><strong>NOTE</strong>, if you cancel the appointment, you will need to pay 25$</p>
+					<p><strong>NOTE</strong>, if you cancel the appointment 7 days before the start, you will need to pay 50$</p>
 					<p><a href="{% url 'edit' %}" class="btn btn-primary btn-outline">Edit</a></p>
-					<p><a href="{% url 'cancel_appointment' appointment.id %}" class="btn btn-primary btn-outline">CANCEL</a></p>
+					<p><a href="{% url 'cancel_appointment' appointment.id %}" class="btn btn-primary btn-outline">CANCEL</a>{% if pay_or_not %} You will pay 50$ {% endif %}</p>
+					
 				</div>
 			</div>
 		</div>

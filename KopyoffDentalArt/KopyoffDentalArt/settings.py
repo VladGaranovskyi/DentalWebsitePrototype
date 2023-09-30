@@ -65,12 +65,16 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'appointments.context_processors.header_processor',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'KopyoffDentalArt.wsgi.application'
+
+LOGIN_REDIRECT_URL = '/appointments/dashboard'
+LOGOUT_REDIRECT_URL = '/'
 
 
 # Database
@@ -134,6 +138,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'info@kopyoffdentalart.com'
-EMAIL_HOST_PASSWORD = 'office4222' 
+EMAIL_HOST_PASSWORD = 'zonn zveh msii irsz' 
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

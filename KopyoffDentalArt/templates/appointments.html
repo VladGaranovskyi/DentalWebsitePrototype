@@ -72,7 +72,7 @@ document.getElementById("taskdatetime").onchange = evt => {
         dates[currentDate].forEach(d =>{
             const a = document.createElement("div");
             a.setAttribute("class", "appointment upcoming");
-            a.onclick = ViewDetails(d.name, d.email, d.message, d.service, d.insurance);
+            a.setAttribute("onclick", `ViewDetails('${d.name}', '${d.email}', '${d.message}', '${d.service}', '${d.insurance}')`);
             const t = document.createElement("div");
             t.setAttribute("class", "time");
             t.textContent = `${d.start_time} - ${d.end_time}`;
