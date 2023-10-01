@@ -138,7 +138,7 @@ class BookingView(View):
             appointment.save()
             send_mail(
                 "Dr. Helen Kopyoff",
-                f"Congratulations! You have successfully booked appointment from {appointment.get_time()[0]} to {appointment.get_time()[1]}",
+                f"Congratulations! You have successfully booked appointment on {appointment.get_date()} from {appointment.get_time()[0]} to {appointment.get_time()[1]}",
                 "info@kopyoffdentalart.com",
                 [email],
                 fail_silently=True,
