@@ -128,7 +128,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    join_path(BASE_DIR, 'static'),
+    BASE_DIR / 'static',
 )
 
 STATIC_ROOT = join_path(BASE_DIR, 'staticfiles')
