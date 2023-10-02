@@ -127,7 +127,7 @@ class BookingView(View):
                 or (a.start_date.time() <= end_date.time() and a.end_date.time() > end_date.time()):
                     errors.append("this time has already been taken")
                     break
-        if not validate_email(email, verify=True):
+        if not validate_email(email, check_mx=True):
             errors.append("email is invalid")
         if errors:
             blockings = [[a.start_date.strftime("%m/%d/%Y %I:%M %p"), a.end_date.strftime("%m/%d/%Y %I:%M %p")] for a in Appointment.objects.get_blocks()]
@@ -180,7 +180,7 @@ class EditAppointmentView(View):
         #         or (a.start_date.timestamp() <= end_date.timestamp() and a.end_date.timestamp() > end_date.timestamp()):
         #             errors.append("this time has already been taken")
         #             break
-        if not validate_email(email, verify=True):
+        if not validate_email(email, check_mx=True):
             errors.append("email is invalid")
         if errors:
             blockings = [[a.start_date.strftime("%m/%d/%Y %I:%M %p"), a.end_date.strftime("%m/%d/%Y %I:%M %p")] for a in Appointment.objects.get_blocks()]
