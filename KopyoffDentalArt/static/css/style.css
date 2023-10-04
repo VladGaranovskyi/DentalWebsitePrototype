@@ -16,11 +16,15 @@ body {
   font-size: 18px;
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.3);
-  background: #0053a0;/*#000 url(../images/broken_noise.png) repeat;*/
+  background: #000 url(../images/background.jpg) repeat;/*#0053a0;*/
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   body {
-    background: #0053a0;
+    background: #000 url(../images/background.jpg) repeat;/*#0053a0;*/
+  }
+  #helen_kopyoff{
+    width: 400px;
+    height: 300px;
   }
 }
 
