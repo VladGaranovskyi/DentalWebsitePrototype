@@ -34,7 +34,7 @@ There is 1 essential db model in backend side of the project - Appointment;
             <li><span>js</span></li>
             <li><span>css</span></li>
             <li><span>fonts</span></li>
-            <li><span>images</span></li
+            <li><span>images</span></li>
         </ul>
     </li>
     <li>
