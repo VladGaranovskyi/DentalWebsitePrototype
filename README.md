@@ -31,7 +31,7 @@ There is 1 essential db model in backend side of the project - Appointment;
     <li>
         <span>static</span>
         <ul style="list-style-type:none;margin: 0">
-            li><span>js</span></li>
+            <li><span>js</span></li>
             <li><span>css</span></li>
             <li><span>fonts</span></li>
             <li><span>images</span></li
