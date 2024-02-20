@@ -53,9 +53,13 @@ Download or clone this repository. Run `pip install -r requirements.txt` through
 
 To open the web app type `python manage.py runserver`
 
-
 To stop developer mode in the terminal press Ctrl+C.
 
-![Screenshot 2024-02-19 182523](https://github.com/VladGaranovskyi/eCommerceWebsite/assets/114082118/da5ff5ab-3917-49ad-b96e-43623790d1a4)
-![Screenshot 2024-02-19 182705](https://github.com/VladGaranovskyi/eCommerceWebsite/assets/114082118/3a56fa77-90e1-4f9b-b047-11f4745d7dad)
-![Screenshot 2024-02-19 184028](https://github.com/VladGaranovskyi/eCommerceWebsite/assets/114082118/9b7e4add-a733-41c5-9030-75920708b7cf)
+## Link
+https://www.kopyoffdental.com/
+
+## Screenshots
+![Screenshot 2024-02-19 201649](https://github.com/VladGaranovskyi/DentalWebsitePrototype/assets/114082118/cac7dc9c-f9c0-4c40-b320-5d11e40bbc7c)
+![Screenshot 2024-02-19 201602](https://github.com/VladGaranovskyi/DentalWebsitePrototype/assets/114082118/5ed7f50b-0d68-4b2d-99ae-354e05c86c6e)
+![Screenshot 2024-02-19 201534](https://github.com/VladGaranovskyi/DentalWebsitePrototype/assets/114082118/872757d4-0d1e-4358-8867-f762fadf981b)
+
